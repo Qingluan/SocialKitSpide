@@ -1,0 +1,20 @@
+<script type="text/javascript">
+    var city_fly_to = function(to){
+        {{ earth }}.fly_to(to, 1600)
+        {{ earth }}.fly_to(to, 1600)
+        res = {{ earth }}.gps_search(to)
+        {{ earth }}.mark(res, to, 8000)
+        {{ map }}.flyTo([res[1],res[0]])
+    }
+
+    websocket = new web_client("{{host}}");
+    websocket.on_msg(function(json){
+        console.log(json);
+        if (json.action == "fly"){
+            city_fly_to(json.city)
+        }else{
+            console.log(json)
+        }
+    })
+
+</script>

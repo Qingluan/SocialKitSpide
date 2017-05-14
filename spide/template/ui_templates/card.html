@@ -1,0 +1,16 @@
+<div class="row card-container">
+    <div class="thumbnail card">
+    	{% if img_url != None %}
+        <img src="{{ static_url(img_url) }}" alt="what" class="img-circle "/>
+        {% end %}
+        <div class="caption">
+        {% if html ==  None %}
+            <h3>{{ title }}</h3>
+            <p>{{ content }}</p>
+            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+        {% else %}
+        	{{ html }}
+        {% end %}
+        </div>
+    </div> 
+</div>

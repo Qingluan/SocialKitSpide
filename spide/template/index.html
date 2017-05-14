@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>      
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>index</title>     
+    <link href="/static/bootstrap/dist/css/bootstrap.css" rel="stylesheet"></link>
+    {% block head_css %}
+         <link href="/static/css/index.css" rel="stylesheet"></link>
+    {% end %}
+    
+    {% block extends_css %}
+    {% end %}
+</head>     
+<body>      
+    <div class="main" class='main'>
+        <div class="body">
+            {% block left_d %}
+            <div class="left col-md-3 col-sm-4 col-xs-12">
+            {% module Nav([
+            {
+                'txt':'Index',
+                'link': '/',
+                'active': '1',
+                'tq': '1'
+            },
+            {
+                'txt':'Sql Inject',
+                'link': '/sqlinject',
+
+            },] ,title='Index') %}
+            {% block left %}
+            {% end %}
+            {% end %}
+                
+            </div>
+
+            {% block content_d %}
+            <div class="content col-md-9 col-sm-8 col-xs-9">
+                <div class="head">
+                {% block head %}
+                    <h1>Hacker Sites <small>ok?</small></h1>
+                    <p>index</p>
+                    {% module Files() %}
+                {% end %}
+                </div>
+            {% block content %}
+                <p>test</p>
+                
+            {% end %}
+            </div>
+            {% end %}
+        </div>
+        <div class="tail">
+        {% block tail %}
+        {% end %}
+        </div>
+    </div>
+    
+
+    <script src="/static/jquery/dist/jquery.min.js"></script>
+    <script src="/static/bootstrap/dist/js/bootstrap.js"></script>
+    {% block body_js %}
+        <script src="/static/js/index.js"></script>
+        <!--
+        <script type="text/javascript">
+            websocket = new web_client("ws://localhost:8080/[url]")
+            websocket.on_msg(function(json){
+                console.log(json);
+            }
+        </script> 
+        -->
+    {% end %}
+
+    {% block extends_js %}
+
+    {% end %}
+</body>     
+</html>
+    

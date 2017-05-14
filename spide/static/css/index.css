@@ -1,0 +1,28 @@
+.body {
+    margin-top:50px;
+}
+
+.card-container {
+    background: #ebebeb;
+    margin:10px;
+    border-radius: 25px; 
+}
+
+.card-container > .card {
+    background: #fafafa;
+    border: 2px solid white;
+    border-radius: 20px;
+    margin: 2px;
+}
+
+.card > img {
+    width: 60px;
+    height: 60px;
+    float: left;
+    margin-right: 30px;
+    margin-bottom: 30px;
+    padding: 4px;
+    border: 2px solid #fff;
+    background: rgb(229, 229, 229);
+
+}

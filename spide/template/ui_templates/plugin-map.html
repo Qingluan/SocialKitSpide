@@ -1,0 +1,83 @@
+<link rel="stylesheet" href="static/plugins/leaflet/leaflet.css" />
+ <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" /> -->
+<script src="static/plugins/leaflet/leaflet.js"></script>
+
+ <!-- <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script> -->
+<script src="/static/js/websocket.js"></script>
+<style type="text/css">
+#{{id}} {
+    height: {{height}}px;
+}    
+</style>
+
+<script type="text/javascript">
+
+var lmap = L.map('{{id}}').setView([39.905, 116.43], 13);
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(lmap);
+var marks = []
+
+var include = function(type,data, color){
+    var scolor = "red";
+    if (color != null){
+        scolor = color;
+    }
+
+    if (type == "circle"){
+        for (var i = data.length - 1; i >= 0; i--) {
+            single = data[i]
+            tmp = L.circle(single.slice(0,2), {
+                color: scolor,
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: 500
+            })
+            tmp.addTo(lmap);
+
+            marks.push(tmp)
+        }
+
+    }else if (type == "mark"){
+        for (var i = data.length - 1; i >= 0; i--) {
+            single = data[i]
+            tmp = null
+            if (single.length == 3){
+                tmp = L.marker(single.slice(0,2))
+                tmp.addTo(lmap)
+                    .bindPopup(single[2])
+                    .openPopup();
+            }else{
+                tmp = L.marker(single.slice(0,2))
+                tmp.addTo(lmap)
+            }
+
+            marks.push(tmp)
+        }
+        
+    }else{
+        var polygon = L.polygon(data).addTo(lmap);
+    }
+}
+
+
+var clear = function(){
+    for (var i = marks.length - 1; i >= 0; i--) {
+        marks[i].remove()
+    }
+}
+
+
+websocket = new web_client("{{host}}");
+websocket.on_msg(function(json){
+    console.log(json);
+    if (json.action == "include"){
+        include(json.content.type, json.content.data,json.content.color);
+    }else if(json.action == "clear"){
+        clear();
+    }else if(json.action == "fly"){
+        lmap.flyTo(json.content.data, json.content.zoom)
+    }
+})
+
+</script>

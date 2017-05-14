@@ -1,0 +1,26 @@
+<ul class="nav of nav-{{ type }}">
+  <li class="tq">{{ title }}</li>
+  {% for li in items %}
+    {% if 'active' in li %}
+    <li class="active">
+    {% elif 'tq' in li %}
+      <li class="tq">
+    {% else %}
+    <li>
+    {% end %}
+      {% if 'link' in li %}
+        <a href="{{ li['link'] }}">
+          {{ li['txt'] }}
+        </a>
+      {% else %}
+        {{ li['txt'] }}
+      {% end %}
+      {% if 'code' in li %}
+        <code>{{ li['code'] }}</code>
+      {% end %}
+    </li>
+    {% if 'tq' not in li %}
+    <li class="divider"></li>
+    {% end %}
+  {% end %}
+</ul>
