@@ -6,10 +6,10 @@
 import os
 from os import path
 # here to load all controllers
-from Qtornado.log import LogControl
+# from Qtornado.log import LogControl
 from Qtornado.db import *
 from controller import *
-
+from qlib.asyn import Exe
 # load ui modules
 import ui
 import sys
@@ -25,12 +25,13 @@ rdir_path = os.path.dirname(__file__)
 static_path = rdir_path + r"\static" if sys.platform.startswith("win") else "./static"
 files_path = rdir_path + r".\static\files" if sys.platform.startswith("win") else "./static/files"
 # set log level
-LogControl.LOG_LEVEL |= LogControl.OK
-LogControl.LOG_LEVEL |= LogControl.INFO
-
+# LogControl.LOG_LEVEL |= LogControl.OK
+# LogControl.LOG_LEVEL |= LogControl.INFO
+exe = Exe(7)
 Settings = {
         'db':db_engine,
-        'L': LogControl,
+        # 'L': LogControl,
+        'exe':exe,
         'debug':True,
         "ui_modules": ui,
         'autoreload':True,

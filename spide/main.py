@@ -7,13 +7,14 @@ import tornado.ioloop
 from tornado.ioloop import IOLoop
 from setting import  appication, port
 from qlib.io import GeneratorApi
-import sys
+
 
 def main():
     args = GeneratorApi({
         'port':"set port ",
         })
     port = int(args.port)
+    print("running in : ", port)
     appication.listen(port)
     tornado.ioloop.IOLoop.instance().start()
 

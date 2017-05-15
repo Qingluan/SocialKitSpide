@@ -14,7 +14,7 @@ from chardet import detect
 class BaseHandler(tornado.web.RequestHandler):
     def prepare(self):
         self.db = self.settings['db']
-        self.L = self.settings['L']
+        # self.L = self.settings['L']
     def get_current_user(self):
         return (self.get_cookie('user'),self.get_cookie('passwd'))
     def get_current_secure_user(self):
@@ -67,7 +67,7 @@ class IndexHandler(BaseHandler):
 
     def get(self):
         # L is log function , which include ok , info , err , fail, wrn
-        self.L.ok('got')
+        # self.L.ok('got')
         return self.render(self.template, post_page="/")
 
     @tornado.web.asynchronous
@@ -93,9 +93,45 @@ class GeturiHandler(BaseHandler):
 
     def get(self):
         # L is log function , which include ok , info , err , fail, wrn
-        self.L.ok('got')
+        # self.L.ok('got')
         return self.render(self.template, post_page="/geturi")
 
+    def async_post(self,method, url, kargs, charset):
+        if method == 'browser':
+            driver = WebDriver(**kargs)
+            driver.get(url)
+            print("got it ",url)
+            return ({
+                'data':driver.page,
+                'url':url,
+                'code':200,
+                },)
+
+
+        elif method == 'requests':
+            res = to(url, **kargs)
+            print("got it:" , url)
+            if res.status_code == 200:
+                if charset:
+                    encoding = charset
+                else:
+                    if len(res.content) > 2000:
+                        test_con = res.content[:2000]
+                    else:
+                        test_con = res.content
+
+                    encoding = detect(test_con).get('encoding')
+                print(encoding)
+                return ({
+                    'data':res.content.decode(encoding, 'ignore'),
+                    'url':url,
+                    'code':200,
+                },)
+            else:
+                return ({
+                    'url':url,
+                    'code':400,
+                },)
 
     @tornado.web.asynchronous
     def post(self):
@@ -108,43 +144,6 @@ class GeturiHandler(BaseHandler):
         kargs = json.loads(self.get_argument("options"))
         charset = self.get_argument('charset')
         
-        if method == 'browser':
-            driver = WebDriver(**kargs)
-            driver.get(url)
-            self.json_reply({
-                'data':driver.page,
-                'url':url,
-                'code':200,
-                })
-
-
-        elif method == 'requests':
-            res = to(url, **kargs)
-            self.L.ok("got it:" , url)
-            if res.status_code == 200:
-                if charset:
-                    encoding = charset
-                else:
-                    if len(res.content) > 2000:
-                        test_con = res.content[:2000]
-                    else:
-                        test_con = res.content
-
-                    encoding = detect(test_con).get('encoding')
-                self.L.ok(encoding)
-                self.json_reply({
-                    'data':res.content.decode(encoding, 'ignore'),
-                    'url':url,
-                    'code':200,
-                })
-            else:
-                self.json_reply({
-                    'url':url,
-                    'code':400,
-                })
-        
-
-
-
+        self.settings['exe'].done(self.async_post, self.json_reply, method, url, kargs, charset)
         
     
