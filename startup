@@ -1,0 +1,25 @@
+#!/bin/bash
+
+NUMBER=$1
+OP=$2
+
+if [[ $OP == "stop" ]];then
+    docker ps -a | grep social-spide | awk '{ print $1 }' |xargs docker rm -f;
+    exit 0
+fi
+
+if [[ $OP != "start" ]];then
+    echo "operation : [start/stop]"
+    exit 0
+fi
+
+res="$(cat << EOF | python
+
+for i in range($NUMBER):
+    print("docker run -dp " + str(9000+ i) + ":8080  -e SHADOW_HOST=us2.qingluan.org -e PORT=8080 social-spide;")
+
+EOF)"
+echo "solder ready!!!"
+eval $res
+echo "solder running"
+

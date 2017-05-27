@@ -47,7 +47,6 @@ RUN apt install -y libfontconfig1 libfreetype6 libssl-dev chrpath
 
 RUN pip3 install SocialKit --upgrade  -i https://pypi.douban.com/simple
 ADD spide.tar.gz /opt/
-WORKDIR /opt/spide
 ADD phantomjs-2.1.1-linux-x86_64.tar.bz2 /opt/
 
 ADD ss-server.json /tmp/
@@ -58,4 +57,5 @@ EXPOSE 3009
 ADD help /usr/bin/
 
 WORKDIR /opt/
+WORKDIR /opt/spide
 CMD if [[ $EX == "ss" ]];then /usr/local/bin/ssserver -c /tmp/ss-server.json -d start ;fi; /usr/local/bin/sslocal -s $SHADOW_HOST -p $SHADOW_PORT  -m $SHADOW_METHOD -k $SHADOW_PASS -l $SHADOW_LOCAL_PORT  -d start ; /usr/bin/python3  main.py -p $PORT
