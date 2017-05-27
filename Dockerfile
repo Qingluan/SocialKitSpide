@@ -29,22 +29,33 @@ RUN pip3 install qtornado --upgrade -i https://pypi.douban.com/simple
 RUN pip3 install shadowsocks -i https://pypi.douban.com/simple
 
 
-ADD spide.tar.gz /opt/
-WORKDIR /opt/spide
 ENV PORT 8088
 ENV SHADOW_HOST localhost
 ENV SHADOW_PORT 3007
 ENV SHADOW_PASS dark1
 ENV SHADOW_LOCAL_PORT 1080
 ENV SHADOW_METHOD aes-256-cfb
+ENV EX only-start-spide
 
-ADD phantomjs-2.1.1-linux-x86_64.tar.bz2 /opt/
-WORKDIR /opt/
+
 #RUN tar xjf phantomjs-2.1.1-linux-x86_64.tar.bz2
 RUN ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/share/phantomjs
 RUN ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs
 RUN ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
 
 RUN apt install -y libfontconfig1 libfreetype6 libssl-dev chrpath
+
+RUN pip3 install SocialKit --upgrade  -i https://pypi.douban.com/simple
+ADD spide.tar.gz /opt/
 WORKDIR /opt/spide
-CMD /usr/local/bin/sslocal -s $SHADOW_HOST -p $SHADOW_PORT  -m $SHADOW_METHOD -k $SHADOW_PASS -l $SHADOW_LOCAL_PORT  -d start ; /usr/bin/python3  main.py -p $PORT
+ADD phantomjs-2.1.1-linux-x86_64.tar.bz2 /opt/
+
+ADD ss-server.json /tmp/
+EXPOSE 3007
+EXPOSE 3008
+EXPOSE 3009
+
+ADD help /usr/bin/
+
+WORKDIR /opt/
+CMD if [[ $EX == "ss" ]];then /usr/local/bin/ssserver -c /tmp/ss-server.json -d start ;fi; /usr/local/bin/sslocal -s $SHADOW_HOST -p $SHADOW_PORT  -m $SHADOW_METHOD -k $SHADOW_PASS -l $SHADOW_LOCAL_PORT  -d start ; /usr/bin/python3  main.py -p $PORT

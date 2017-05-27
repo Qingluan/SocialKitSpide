@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function msg(){
+cat  << EOF | python3
+from SocialKit.log import L
+L(*"""$*""".split())
+EOF
+
+}
+
+
+msg 'sslocal -s $SHADOW_HOST  -k $SHADOW_PASS -m $SHADOW_METHOD -p $SHADOW_PORT  -l $SHADOW_LOCAL_PORT  -d start';
+
+
