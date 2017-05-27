@@ -58,4 +58,4 @@ ADD help /usr/bin/
 
 WORKDIR /opt/
 WORKDIR /opt/spide
-CMD if [[ $EX == "ss" ]];then /usr/local/bin/ssserver -c /tmp/ss-server.json -d start ;fi; /usr/local/bin/sslocal -s $SHADOW_HOST -p $SHADOW_PORT  -m $SHADOW_METHOD -k $SHADOW_PASS -l $SHADOW_LOCAL_PORT  -d start ; /usr/bin/python3  main.py -p $PORT
+CMD  /usr/local/bin/sslocal -s $SHADOW_HOST -p $SHADOW_PORT  -m $SHADOW_METHOD -k $SHADOW_PASS -l $SHADOW_LOCAL_PORT  -d start &&  /usr/bin/python3  main.py -p $PORT

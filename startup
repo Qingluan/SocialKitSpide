@@ -14,12 +14,24 @@ if [[ $OP != "start" ]];then
 fi
 
 res="$(cat << EOF | python
-
+import os
+print(os.getcwd())
+SERVERS=[]
+if os.path.exists("SERVERS"):
+    with open("SERVERS") as fp:
+        for l in fp:
+            if l.strip():
+                s,sp,p = l.split(":")
+                SERVERS.append([s,sp,p])
 for i in range($NUMBER):
-    print("docker run -dp " + str(9000+ i) + ":8080  -e SHADOW_HOST=us2.qingluan.org -e PORT=8080 social-spide;")
+    s,sp,p = SERVERS[i% len(SERVERS)]
+    print("docker run -dp " + str(9000+ i) + ":8080  -e SHADOW_HOST={s} -e SHADOW_PORT={sp} -e SHADOW_PASS={p} -e PORT=8080 social-spide;".format(s=s,sp=sp,p=p))
 
 EOF)"
-echo "solder ready!!!"
+
+
+echo "solder ready!!!";
+
 eval $res
 echo "solder running"
 
